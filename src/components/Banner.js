@@ -28,23 +28,23 @@ function Banner() {
           <img
             className="w-screen h-full object-cover"
             src={data[0]}
-            alt="slide picture"
+            alt="slide"
             loading="priority"
           />
           <img
             className="w-screen h-full object-cover"
             src={data[1]}
-            alt="slide picture"
+            alt="slide"
           />
           <img
             className="w-screen h-full object-cover"
             src={data[2]}
-            alt="slide picture"
+            alt="slide"
           />
           <img
             className="w-screen h-full object-cover"
             src={data[3]}
-            alt="slide picture"
+            alt="slide"
           />
         </div>
         <div className="absolute w-fit left-0 right-0 mx-auto flex gap-8 bottom-44">
