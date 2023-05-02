@@ -4,9 +4,9 @@ import { HiArrowRight, HiArrowLeft } from "react-icons/hi";
 function Banner() {
   const [currImg, setCurrImg] = useState(0);
   const data = [
-    "https://img5.goodfon.com/wallpaper/nbig/f/a3/longboard-street-wallpaper-1.jpg",
-    "https://wallpaperaccess.com/full/2099486.jpg",
-    "https://mcdn.wallpapersafari.com/medium/51/99/jOkL69.jpg",
+    "https://smartslider3.com/wp-content/uploads/slider/cache/2eac36426bb7c29a06cdd9f1fc93aea9/fullwidth-product-slider1.jpg",
+    "https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg?cs=srgb&dl=pexels-karol-d-325153.jpg&fm=jpg",
+    "https://wallpapershome.com/images/pages/pic_h/13880.jpg",
     "https://wallpaperaccess.com/full/5524232.jpg",
   ];
 

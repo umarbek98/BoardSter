@@ -30,10 +30,10 @@ const Footer = () => {
         <div>
           <h2 className="text-2xl font-semibold text-white mb-4">Locate Us</h2>
           <div className="text-base flex flex-col gap-2">
-            <p>BoardSter Inc.</p>
+            <p>ShopSter Inc.</p>
             <p>Phone: +1{` (123)-123-1234`}</p>
             <p>Fax: {` (122)-123-1234`}</p>
-            <p>E-mail: BoardSter@gmail.com</p>
+            <p>E-mail: ShopSter@gmail.com</p>
           </div>
         </div>
         <div>
