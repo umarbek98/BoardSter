@@ -1,7 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/shopsterSlice";
+import { ToastContainer, toast } from "react-toastify";
 
 function ProductsCard({ product }) {
-  const { image, title, price, category } = product;
+  const dispatch = useDispatch();
+  const { id, image, title, price, category, description } = product;
+  const _id = title;
+  const navigate = useNavigate();
+
+  const idString = (_id) => {
+    return String(_id).toLowerCase().split(" ").join("");
+  };
+
+  const rootId = idString(_id);
 
   const shortenedTitle =
     title.substring(0, 17) + (title.length > 15 ? "..." : "");
@@ -15,9 +28,20 @@ function ProductsCard({ product }) {
     return formattedCurrency;
   }
 
+  function handleDetails() {
+    navigate(`/product/${rootId}`, {
+      state: {
+        item: product,
+      },
+    });
+  }
+
   return (
     <div className="group border-[1px]">
-      <div className="w-full h-96 cursor-pointer overflow-hidden">
+      <div
+        onClick={handleDetails}
+        className="w-full h-96 cursor-pointer overflow-hidden"
+      >
         <img
           className="w-full h-full group-hover:scale-110 duration-500"
           src={image}
@@ -33,7 +57,21 @@ function ProductsCard({ product }) {
             <div className="flex gap-2 transform group-hover:translate-x-24 transition-transform duration-500">
               <p className="font-semibold">{formatCurrency(price)}</p>
             </div>
-            <p className="absolute z-20 w-[100px] text-gray-500 hover:text-gray-900 flex items-center gap-1 top-0 transfrom -translate-x-32 group-hover:translate-x-0 transition-transform cursor-pointer duration-500">
+            <p
+              onClick={() =>
+                dispatch(
+                  addToCart({
+                    _id: id,
+                    title,
+                    image,
+                    price,
+                    quantity: 1,
+                    description,
+                  })
+                ) & toast.success(`${title} added`)
+              }
+              className="absolute z-20 w-[100px] text-gray-500 hover:text-gray-900 flex items-center gap-1 top-0 transfrom -translate-x-32 group-hover:translate-x-0 transition-transform cursor-pointer duration-500"
+            >
               add to cart
             </p>
           </div>
@@ -42,6 +80,18 @@ function ProductsCard({ product }) {
           <p>{category}</p>
         </div>
       </div>
+      <ToastContainer
+        position="top-left"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

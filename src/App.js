@@ -11,11 +11,14 @@ import {
   RouterProvider,
   ScrollRestoration,
 } from "react-router-dom";
+import Product from "./components/Product";
+import Login from "./pages/Login";
 
 const Layout = () => {
   return (
     <div>
       <Header />
+      <ScrollRestoration />
       <Outlet />
       <Footer />
     </div>
@@ -33,8 +36,16 @@ const router = createBrowserRouter([
         loader: productsData,
       },
       {
+        path: "/product/:id",
+        element: <Product />,
+      },
+      {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
       },
     ],
   },
