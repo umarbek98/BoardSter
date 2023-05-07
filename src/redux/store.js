@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import shopsterReducer from "./shopsterSlice";
+import loginReducer from "./loginSlice";
 import {
   persistStore,
   persistReducer,
@@ -21,7 +22,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, shopsterReducer);
 
 export const store = configureStore({
-  reducer: { shopster: persistedReducer },
+  reducer: { shopster: persistedReducer, login: loginReducer },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

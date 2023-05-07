@@ -1,24 +1,31 @@
 import React from "react";
 import { cartImg, logo, userLogo } from "../assets";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/loginSlice";
 
 function Header() {
   const productData = useSelector((state) => state.shopster.productData);
   const listTailStyle =
     "text-base text-black font-bold hover:text-orange-900 hover:underline underline-offset-2 decoration-[1px] cursor-pointer duration-300";
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+    dispatch(logout());
+  }
 
   return (
     <div className="w-full h-20 bg-white border-b-[1px] border-b-gray-800 sticky top-0 z-50">
       <div className="max-w-screen-xl h-full mx-auto flex items-center justify-between">
-        <Link to="/">
-          <div>
-            <img className="w-28" src={logo} alt="logo" />
-          </div>
-        </Link>
+        <div>
+          <img className="w-28" src={logo} alt="logo" />
+        </div>
         <div className="flex items-center gap-8">
           <ul className="flex items-center gap-8">
-            <li className={listTailStyle}>Home</li>
+            <Link to="/">
+              <li className={listTailStyle}>Home</li>
+            </Link>
             <li className={listTailStyle}>Pages</li>
             <li className={listTailStyle}>Shop</li>
             <li className={listTailStyle}>Element</li>
@@ -32,13 +39,23 @@ function Header() {
               </span>
             </div>
           </Link>
-          <Link to="/login">
-            <img
-              className="w-8 h-8 rounded-full"
-              src={userLogo}
-              alt="user logo"
-            />
-          </Link>
+          {isLoggedIn ? (
+            <Link to="/profile">
+              <img
+                className="w-8 h-8 rounded-full"
+                src={userLogo}
+                alt="user logo"
+              />
+            </Link>
+          ) : (
+            <Link to="/login">
+              <img
+                className="w-8 h-8 rounded-full"
+                src={userLogo}
+                alt="user logo"
+              />
+            </Link>
+          )}
         </div>
       </div>
     </div>

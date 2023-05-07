@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
@@ -13,7 +13,12 @@ import {
 } from "react-router-dom";
 import Product from "./components/Product";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import { useDispatch } from "react-redux";
+import { makeLoginCheckRequest } from "./redux/loginSlice";
 
+console.log();
 const Layout = () => {
   return (
     <div>
@@ -47,11 +52,25 @@ const router = createBrowserRouter([
         path: "/login",
         element: <Login />,
       },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
     ],
   },
 ]);
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(makeLoginCheckRequest());
+  }, []);
+
   return (
     <div>
       <RouterProvider router={router} />
