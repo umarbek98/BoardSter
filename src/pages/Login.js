@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { login, makeLoginRequest } from "../redux/loginSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { makeLoginRequest } from "../redux/loginSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      window.location.href = "/";
+    }
+  }, [isLoggedIn]);
 
   async function submitLogin(e) {
     e.preventDefault();
@@ -19,7 +25,6 @@ const Login = () => {
           password,
         })
       );
-      // dispatch(login(resp));
     } catch (err) {
       console.log(err);
     }

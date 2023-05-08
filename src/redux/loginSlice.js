@@ -36,7 +36,7 @@ export const makeLoginRequest = createAsyncThunk(
       console.log(err);
       if (err.response && err.response.status === 401) {
         console.log(err);
-        return rejectWithValue("Invalid username or password.");
+        return rejectWithValue("Invalid email or password.");
       } else {
         return rejectWithValue("Something went wrong. Please try again later.");
       }
@@ -67,18 +67,16 @@ const loginSlice = createSlice({
     },
   },
   extraReducers: {
-    [makeLoginCheckRequest.fulfilled]: (state, action) => {
-      state.status = "succeeded";
-      console.log(action.payload);
-      state.isLoggedIn = true;
-    },
-    [makeLoginRequest.fulfilled]: (state) => {
+    [makeLoginCheckRequest.fulfilled]: (state) => {
       state.status = "succeeded";
       state.isLoggedIn = true;
     },
-    [makeLoginRequest.rejected]: (state, action) => {
+    [makeLoginRequest.fulfilled]: (state, action) => {
+      state.status = "succeeded";
+      state.isLoggedIn = true;
+    },
+    [makeLoginRequest.rejected]: (state) => {
       state.status = "failed";
-      console.log(action);
       state.isLoggedIn = false;
     },
   },

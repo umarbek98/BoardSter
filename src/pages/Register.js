@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -8,10 +9,21 @@ const Register = () => {
   const [verifyPassword, setVerifyPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
 
+  function handlePasswordChange(e) {
+    setPassword(e.target.value);
+    // setPasswordMatch(e.target.value === verifyPassword);
+  }
+
+  function handleVerifyPasswordChange(e) {
+    setVerifyPassword(e.target.value);
+    setPasswordMatch(e.target.value === password);
+  }
+
   async function submitReg(e) {
     e.preventDefault();
     if (password !== verifyPassword) {
       setPasswordMatch(false);
+      toast.error();
       return;
     }
     try {
@@ -65,7 +77,7 @@ const Register = () => {
                   Password
                 </label>
                 <input
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   value={password}
                   type="password"
                   name="password"
@@ -83,7 +95,7 @@ const Register = () => {
                   Confirm Password
                 </label>
                 <input
-                  onChange={(e) => setVerifyPassword(e.target.value)}
+                  onChange={handleVerifyPasswordChange}
                   value={verifyPassword}
                   type="password"
                   name="confirm-password"
@@ -92,6 +104,9 @@ const Register = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required=""
                 />
+                {passwordMatch ? null : (
+                  <p className="text-[#ff0000] mt-2">Password does not match</p>
+                )}
               </div>
               <button
                 type="submit"

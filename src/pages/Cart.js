@@ -2,10 +2,22 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import CartItem from "../components/CartItem";
 import { ToastContainer, toast } from "react-toastify";
+import StripChekout from "react-stripe-checkout";
+import axios from "axios";
 
 const Cart = () => {
   const productData = useSelector((state) => state.shopster.productData);
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const userData = useSelector((state) => state.login.user);
   const [totalPrice, setTotalPrice] = useState("");
+  const [payNow, setPayNow] = useState(false);
+
+  const payment = async (token) => {
+    await axios.post("http://localhost:5000/pay", {
+      amount: totalPrice * 100,
+      token: token,
+    });
+  };
   useEffect(() => {
     let price = 0;
     productData.map((item) => {
@@ -22,6 +34,14 @@ const Cart = () => {
       minimumFractionDigits: 2,
     });
     return formattedCurrency;
+  }
+
+  function handleCheckout() {
+    if (isLoggedIn) {
+      setPayNow(true);
+    } else {
+      toast.error("Please sign in to Checkout");
+    }
   }
 
   return (
@@ -47,9 +67,27 @@ const Cart = () => {
               {formatCurrency(totalPrice)}
             </span>
           </p>
-          <button className="text-base bg-black text-white w-full py-3 mt-6 hover:bg-gray-800 duration-300 cursor-pointer">
+          <button
+            onClick={handleCheckout}
+            className="text-base bg-black text-white w-full py-3 mt-6 hover:bg-gray-800 duration-300 cursor-pointer"
+          >
             proceed to checkout
           </button>
+          {payNow && (
+            <div className="w-full mt-6 flex items-center justify-center">
+              <StripChekout
+                stripeKey="pk_test_51N5amuFMuxCJZwwmp2OZNpo7ssY0u31AyQ8AK0QItsB70ypprKEJRsqFj7EgqN7I3bKg0WeAG7uclfOulsHSLGvj00Mysa5tx4"
+                name="ShopSter Online Store"
+                amount={totalPrice * 100}
+                label="Pay to shopster"
+                description={`Your Payment amount is ${formatCurrency(
+                  totalPrice
+                )}`}
+                token={payment}
+                email={userData}
+              />
+            </div>
+          )}
         </div>
       </div>
       <ToastContainer

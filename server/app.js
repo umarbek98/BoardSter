@@ -1,9 +1,5 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-// const mongoose = require("mongoose");
-// const passportLocalMongoose = require("passport-local-mongoose");
-// const { applyMiddleware } = require("@reduxjs/toolkit");
-// const { default: userEvent } = require("@testing-library/user-event");
 const dbConnect = require("./dbConnect");
 const { User } = require("./userModel");
 const express = require("express");
@@ -13,9 +9,12 @@ passport.deserializeUser(User.deserializeUser());
 const jwt = require("jsonwebtoken");
 const verifyToken = require("./tools/verifyToken");
 const cookieParser = require("cookie-parser");
+const Stripe = require("stripe")(process.env.REACT_APP_SECRET_KEY);
+const cors = require("cors");
 dbConnect();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const host = "http://localhost";
@@ -58,12 +57,12 @@ app.post("/login", async (req, res, next) => {
     console.log(authenticated);
     console.log(authenticated);
     if (!user || !authenticated.user) {
-      err.message(authenticated.error);
+      const err = new Error();
       next(err);
     } else {
       console.log("User logged in successfully");
       const token = jwt.sign({ sub: user._id }, process.env.REACT_APP_SECRET, {
-        expiresIn: "1m",
+        expiresIn: "1h",
       });
       res.cookie("myjwt", token, { httpOnly: true, sameSite: true });
       res.status(200).json({ message: "User logged in successfully.", user });
@@ -71,6 +70,14 @@ app.post("/login", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+app.post("/pay", async (req, res) => {
+  await Stripe.charges.create({
+    source: req.body.token.id,
+    amount: req.body.amount,
+    currency: "usd",
+  });
 });
 
 app.listen(port, () => {
