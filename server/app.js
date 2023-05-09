@@ -24,11 +24,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 app.use(cookieParser());
 
 app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   console.log(password);
 
   try {
-    await User.register(new User({ username }), password);
+    await User.register(new User({ email }), password);
     res.status(200).json({ sucess: "posted" });
   } catch (error) {
     console.log(error);
@@ -50,9 +50,9 @@ app.get("/check", verifyToken, async (req, res, next) => {
 });
 
 app.post("/login", async (req, res, next) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     const authenticated = await user.authenticate(password);
     console.log(authenticated);
     console.log(authenticated);
@@ -73,11 +73,26 @@ app.post("/login", async (req, res, next) => {
 });
 
 app.post("/pay", async (req, res) => {
-  await Stripe.charges.create({
+  console.log("inside pay");
+  const result = await Stripe.charges.create({
     source: req.body.token.id,
     amount: req.body.amount,
     currency: "usd",
   });
+  // console.log(JSON.stringify(result, null, 2));
+
+  res.json({ result });
+});
+
+app.post("/orders", async (req, res) => {
+  const { productIds, userId } = req.body;
+
+  console.log("inside orders");
+
+  const user = await User.findByIdAndUpdate(userId, {
+    $push: { orders: productIds },
+  });
+  res.json({ success: true, user });
 });
 
 app.listen(port, () => {

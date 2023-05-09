@@ -67,12 +67,14 @@ const loginSlice = createSlice({
     },
   },
   extraReducers: {
-    [makeLoginCheckRequest.fulfilled]: (state) => {
+    [makeLoginCheckRequest.fulfilled]: (state, action) => {
       state.status = "succeeded";
+      state.user = action.payload;
       state.isLoggedIn = true;
     },
     [makeLoginRequest.fulfilled]: (state, action) => {
       state.status = "succeeded";
+      state.user = action.payload;
       state.isLoggedIn = true;
     },
     [makeLoginRequest.rejected]: (state) => {

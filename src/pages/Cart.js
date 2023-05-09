@@ -13,11 +13,33 @@ const Cart = () => {
   const [payNow, setPayNow] = useState(false);
 
   const payment = async (token) => {
-    await axios.post("http://localhost:5000/pay", {
+    const resultFromCharge = await axios.post("http://localhost:5000/pay", {
       amount: totalPrice * 100,
       token: token,
     });
+    // .then((res, rej)=> {
+    //   console.log(res)
+    //   if(res){
+
+    //   }
+    // })
+    console.log(resultFromCharge);
+    console.log(resultFromCharge.data.result.status);
+    if (resultFromCharge.data.result.status === "succeeded") {
+      console.log("inside succeeded");
+      orderHistory();
+    }
   };
+
+  async function orderHistory() {
+    const data = {
+      productIds: productData.map((item) => item._id),
+      userId: userData.userId,
+    };
+    console.log(data);
+    await axios.post("/orders", data);
+  }
+
   useEffect(() => {
     let price = 0;
     productData.map((item) => {

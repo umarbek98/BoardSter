@@ -27,9 +27,9 @@ const Register = () => {
       return;
     }
     try {
-      const username = email;
+      // const username = email;
       const resp = await axios.post("/register", {
-        username,
+        email,
         password,
       });
       console.log(resp.data);

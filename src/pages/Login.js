@@ -18,10 +18,9 @@ const Login = () => {
   async function submitLogin(e) {
     e.preventDefault();
     try {
-      const username = email;
       dispatch(
         makeLoginRequest({
-          username,
+          email,
           password,
         })
       );
