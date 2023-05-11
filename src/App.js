@@ -7,7 +7,6 @@ import { productsData } from "./api/Api";
 import {
   createBrowserRouter,
   Outlet,
-  ReouterProvider,
   RouterProvider,
   ScrollRestoration,
 } from "react-router-dom";
@@ -17,6 +16,8 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import { useDispatch } from "react-redux";
 import { makeLoginCheckRequest } from "./redux/loginSlice";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 console.log();
 const Layout = () => {
@@ -60,6 +61,14 @@ const router = createBrowserRouter([
         path: "/profile",
         element: <Profile />,
       },
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
     ],
   },
 ]);
@@ -69,7 +78,7 @@ function App() {
 
   useEffect(() => {
     dispatch(makeLoginCheckRequest());
-  }, []);
+  });
 
   return (
     <div>

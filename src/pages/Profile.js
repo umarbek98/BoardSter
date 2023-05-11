@@ -1,51 +1,65 @@
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { avatarImg } from "../assets";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { makeLogoutRequest } from "../redux/loginSlice";
 
 function Profile() {
-  const user = useSelector((state) => state.login.user);
-  // console.log("the user:" + JSON.stringify(user));
+  const userId = useSelector((state) => state.login.user?.userId || "");
+  const [userOrder, setUserOrders] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (userId) {
+      axios
+        .get(`/orders/${userId}`)
+        .then((resp) => setUserOrders(resp.data.orders))
+        .catch((error) => console.error(error));
+    }
+  }, [userId]);
+
+  function handleLogout() {
+    dispatch(makeLogoutRequest());
+    window.location.href = "/";
+  }
+
   return (
     <div className="max-w-screen-xl mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
       <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-1/5">
-          <img
-            className="w-full h-auto rounded-full"
-            src={avatarImg}
-            alt="Profile Avatar"
-          />
-        </div>
         <div className="w-full md:w-2/3">
           <div className="mb-4">
-            <h2 className="text-lg font-bold">Name:</h2>
-            <p>name</p>
-          </div>
-          <div className="mb-4">
-            <h2 className="text-lg font-bold">Email:</h2>
-            <p></p>
-          </div>
-          <div className="mb-4">
-            <h2 className="text-lg font-bold">Address:</h2>
-            <p>phone</p>
-          </div>
-          <div className="mb-4">
-            <h2 className="text-lg font-bold">Phone:</h2>
-            <p>phone</p>
-          </div>
-          <div className="mb-4">
             <h2 className="text-lg font-bold">Orders:</h2>
-            <ul>
-              {/* {user.orders.map((order) => (
-                <li key={order.id}>
-                  <Link to={`/order/${order.id}`}>{order.id}</Link>
-                </li>
-              ))} */}
-            </ul>
+            {userOrder.map((order, index) => (
+              <div key={index} className="border border-gray-300 p-4 mb-4">
+                <h2 className="text-lg font-bold mb-2">Order {index + 1}</h2>
+                <ul>
+                  {order.map((item) => (
+                    <li key={item._id} className="flex items-center gap-4">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
+                      <div>
+                        <h3 className="font-bold">{item.title}</h3>
+                        <p className="text-gray-500">{item.description}</p>
+                        <p className="text-gray-500">
+                          Price: ${item.price} | Quantity: {item.quantity}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+      <button
+        onClick={handleLogout}
+        className="bg-black text-white py-2 px-4 hover:bg-gray-800"
+      >
+        Logout
+      </button>
     </div>
   );
 }

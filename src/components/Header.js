@@ -1,19 +1,13 @@
 import React from "react";
 import { cartImg, logo, userLogo } from "../assets";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/loginSlice";
+import { useSelector } from "react-redux";
 
 function Header() {
   const productData = useSelector((state) => state.shopster.productData);
   const listTailStyle =
     "text-base text-black font-bold hover:text-orange-900 hover:underline underline-offset-2 decoration-[1px] cursor-pointer duration-300";
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
-  const dispatch = useDispatch();
-
-  function handleLogout() {
-    dispatch(logout());
-  }
 
   return (
     <div className="w-full h-20 bg-white border-b-[1px] border-b-gray-800 sticky top-0 z-50">
@@ -26,10 +20,12 @@ function Header() {
             <Link to="/">
               <li className={listTailStyle}>Home</li>
             </Link>
-            <li className={listTailStyle}>Pages</li>
-            <li className={listTailStyle}>Shop</li>
-            <li className={listTailStyle}>Element</li>
-            <li className={listTailStyle}>Blog</li>
+            <Link to="/about">
+              <li className={listTailStyle}>About</li>
+            </Link>
+            <Link to="/contact">
+              <li className={listTailStyle}>Contact</li>
+            </Link>
           </ul>
           <Link to="/cart">
             <div className="relative">

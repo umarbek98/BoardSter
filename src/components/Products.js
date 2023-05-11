@@ -6,7 +6,7 @@ function Products({ products }) {
     <div className="py-10">
       <div className="flex flex-col items-center gap-4">
         <h1 className="text-2x1 bg-black text-white py-2 w-80 text-center">
-          Its Time To Ride
+          Its Time To Shop
         </h1>
         <span className="w-20 h-[3px] bg-black"></span>
       </div>

@@ -53,6 +53,24 @@ export const makeLoginRequest = createAsyncThunk(
   }
 );
 
+export const makeLogoutRequest = createAsyncThunk(
+  "login/makeLogoutRequest",
+  async () => {
+    const resp = await instance.post("/logout");
+    Cookies.remove("myjwt");
+    return resp.data;
+  },
+  {
+    pending: (state) => {
+      state.status = "loading";
+    },
+    rejected: (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message;
+    },
+  }
+);
+
 const loginSlice = createSlice({
   name: "login",
   initialState,
@@ -80,6 +98,15 @@ const loginSlice = createSlice({
     [makeLoginRequest.rejected]: (state) => {
       state.status = "failed";
       state.isLoggedIn = false;
+    },
+    [makeLogoutRequest.fulfilled]: (state) => {
+      state.status = "succeeded";
+      state.isLoggedIn = false;
+      state.user = null;
+    },
+    [makeLogoutRequest.rejected]: (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message;
     },
   },
 });

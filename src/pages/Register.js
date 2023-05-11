@@ -32,6 +32,7 @@ const Register = () => {
         email,
         password,
       });
+      window.location.href = "/login";
       console.log(resp.data);
     } catch (err) {
       console.log(err);

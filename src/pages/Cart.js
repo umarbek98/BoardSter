@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CartItem from "../components/CartItem";
 import { ToastContainer, toast } from "react-toastify";
 import StripChekout from "react-stripe-checkout";
 import axios from "axios";
+import { resetCart } from "../redux/shopsterSlice";
 
 const Cart = () => {
   const productData = useSelector((state) => state.shopster.productData);
@@ -12,28 +13,23 @@ const Cart = () => {
   const [totalPrice, setTotalPrice] = useState("");
   const [payNow, setPayNow] = useState(false);
 
+  const disptach = useDispatch();
+
   const payment = async (token) => {
     const resultFromCharge = await axios.post("http://localhost:5000/pay", {
       amount: totalPrice * 100,
       token: token,
     });
-    // .then((res, rej)=> {
-    //   console.log(res)
-    //   if(res){
-
-    //   }
-    // })
-    console.log(resultFromCharge);
-    console.log(resultFromCharge.data.result.status);
     if (resultFromCharge.data.result.status === "succeeded") {
-      console.log("inside succeeded");
       orderHistory();
+      disptach(resetCart());
+      window.location.href = "/profile";
     }
   };
 
   async function orderHistory() {
     const data = {
-      productIds: productData.map((item) => item._id),
+      products: productData.map((item) => item),
       userId: userData.userId,
     };
     console.log(data);

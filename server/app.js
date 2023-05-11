@@ -72,6 +72,11 @@ app.post("/login", async (req, res, next) => {
   }
 });
 
+app.post("/logout", (req, res) => {
+  res.clearCookie("myjwt");
+  res.status(200).json({ message: "User logged out successfully." });
+});
+
 app.post("/pay", async (req, res) => {
   console.log("inside pay");
   const result = await Stripe.charges.create({
@@ -85,14 +90,26 @@ app.post("/pay", async (req, res) => {
 });
 
 app.post("/orders", async (req, res) => {
-  const { productIds, userId } = req.body;
+  const { products, userId } = req.body;
 
   console.log("inside orders");
 
   const user = await User.findByIdAndUpdate(userId, {
-    $push: { orders: productIds },
+    $push: { orders: products },
   });
   res.json({ success: true, user });
+});
+
+app.get("/orders/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const user = await User.findById(userId);
+    const orders = user.orders;
+    res.status(200).json({ orders });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.listen(port, () => {
