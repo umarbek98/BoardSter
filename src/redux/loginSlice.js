@@ -28,7 +28,6 @@ export const makeLoginRequest = createAsyncThunk(
   "login/makeLoginRequest",
   async (loginData, { rejectWithValue }) => {
     try {
-      console.log(loginData);
       const resp = await instance.post("/login", loginData);
       Cookies.set("myjwt", resp.data.token, { expires: 1 });
       return resp.data;

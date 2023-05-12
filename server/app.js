@@ -25,7 +25,6 @@ app.use(cookieParser());
 
 app.post("/register", async (req, res) => {
   const { email, password } = req.body;
-  console.log(password);
 
   try {
     await User.register(new User({ email }), password);
@@ -54,8 +53,6 @@ app.post("/login", async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     const authenticated = await user.authenticate(password);
-    console.log(authenticated);
-    console.log(authenticated);
     if (!user || !authenticated.user) {
       const err = new Error();
       next(err);
@@ -78,21 +75,17 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/pay", async (req, res) => {
-  console.log("inside pay");
   const result = await Stripe.charges.create({
     source: req.body.token.id,
     amount: req.body.amount,
     currency: "usd",
   });
-  // console.log(JSON.stringify(result, null, 2));
 
   res.json({ result });
 });
 
 app.post("/orders", async (req, res) => {
   const { products, userId } = req.body;
-
-  console.log("inside orders");
 
   const user = await User.findByIdAndUpdate(userId, {
     $push: { orders: products },

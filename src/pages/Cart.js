@@ -16,7 +16,7 @@ const Cart = () => {
   const disptach = useDispatch();
 
   const payment = async (token) => {
-    const resultFromCharge = await axios.post("http://localhost:5000/pay", {
+    const resultFromCharge = await axios.post("/pay", {
       amount: totalPrice * 100,
       token: token,
     });
@@ -32,7 +32,6 @@ const Cart = () => {
       products: productData.map((item) => item),
       userId: userData.userId,
     };
-    console.log(data);
     await axios.post("/orders", data);
   }
 
