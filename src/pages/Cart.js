@@ -32,7 +32,7 @@ const Cart = () => {
       products: productData.map((item) => item),
       userId: userData.userId,
     };
-    await axios.post("/orders", data);
+    await axios.post("http://54.90.78.74:5000/orders", data);
   }
 
   useEffect(() => {
