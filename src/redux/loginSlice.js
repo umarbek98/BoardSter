@@ -11,7 +11,11 @@ export const makeLoginCheckRequest = createAsyncThunk(
   "login/makeLoginCheckRequest",
   async () => {
     const resp = await instance.get("/check");
-    return resp.data;
+    if (resp.data.userId) {
+      return resp.data;
+    } else {
+      throw new Error("User is not logged in.");
+    }
   },
   {
     pending: (state) => {
@@ -20,11 +24,6 @@ export const makeLoginCheckRequest = createAsyncThunk(
     rejected: (state, action) => {
       state.status = "failed";
       state.error = action.error.message;
-    },
-    fulfilled: (state, action) => {
-      state.status = "succeeded";
-      state.user = action.payload;
-      state.isLoggedIn = action.payload.isLoggedIn;
     },
   }
 );
