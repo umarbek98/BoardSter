@@ -21,6 +21,11 @@ export const makeLoginCheckRequest = createAsyncThunk(
       state.status = "failed";
       state.error = action.error.message;
     },
+    fulfilled: (state, action) => {
+      state.status = "succeeded";
+      state.user = action.payload;
+      state.isLoggedIn = action.payload.isLoggedIn;
+    },
   }
 );
 
