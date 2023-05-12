@@ -11,7 +11,7 @@ function Profile() {
   useEffect(() => {
     if (userId) {
       axios
-        .get(`/orders/${userId}`)
+        .get(`http://54.90.78.74:5000/orders/${userId}`)
         .then((resp) => setUserOrders(resp.data.orders))
         .catch((error) => console.error(error));
     }

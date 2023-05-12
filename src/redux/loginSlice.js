@@ -10,7 +10,7 @@ const initialState = {
 export const makeLoginCheckRequest = createAsyncThunk(
   "login/makeLoginCheckRequest",
   async () => {
-    const resp = await instance.get("/check");
+    const resp = await instance.get("http://54.90.78.74:5000/check");
     if (resp.data.userId) {
       return resp.data;
     } else {
@@ -32,7 +32,10 @@ export const makeLoginRequest = createAsyncThunk(
   "login/makeLoginRequest",
   async (loginData, { rejectWithValue }) => {
     try {
-      const resp = await instance.post("/login", loginData);
+      const resp = await instance.post(
+        "http://54.90.78.74:5000/login",
+        loginData
+      );
       Cookies.set("myjwt", resp.data.token, { expires: 1 });
       return resp.data;
     } catch (err) {
@@ -59,7 +62,7 @@ export const makeLoginRequest = createAsyncThunk(
 export const makeLogoutRequest = createAsyncThunk(
   "login/makeLogoutRequest",
   async () => {
-    const resp = await instance.post("/logout");
+    const resp = await instance.post("http://54.90.78.74:5000/logout");
     Cookies.remove("myjwt");
     return resp.data;
   },
