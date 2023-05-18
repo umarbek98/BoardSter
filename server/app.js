@@ -52,17 +52,30 @@ app.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
+    console.log(`user:${JSON.stringify(user, null, 2)}`);
     const authenticated = await user.authenticate(password);
-    if (!user || !authenticated.user) {
+    console.log(`authenticated: 
+    ${authenticated}`);
+    if (!user || !authenticated.user || null || undefined) {
       const err = new Error();
       next(err);
     } else {
-      console.log("User logged in successfully");
-      const token = jwt.sign({ sub: user._id }, process.env.REACT_APP_SECRET, {
-        expiresIn: "1h",
+      const token = await jwt.sign(
+        { sub: user._id },
+        process.env.REACT_APP_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      );
+      console.log(`token: ${token}`);
+      res.json({
+        status: 200,
+        token,
+        httpOnly: true,
+        sameSite: true,
+        message: "user logged in",
+        user,
       });
-      res.cookie("myjwt", token, { httpOnly: true, sameSite: true });
-      res.status(200).json({ message: "User logged in successfully.", user });
     }
   } catch (err) {
     next(err);
@@ -108,3 +121,9 @@ app.get("/orders/:userId", async (req, res) => {
 app.listen(port, () => {
   console.log(`server is listening on ${host}:${port}`);
 });
+
+// const http = require("http");
+// const httpServer = http.createServer(app);
+// httpServer.listen(3000, () => {
+//   console.log(`HTTP server is listening on ${host}:5000`);
+// });

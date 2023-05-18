@@ -13,12 +13,14 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(
-  (config) => {
-    const token = Cookies.get("myjwt");
+  async (config) => {
+    const token = await Cookies.get("myjwt");
     if (token) {
-      console.log(token);
+      // console.log(token);
       config.headers.Authorization = `Bearer ${token}`;
+      config.cookies.myjwt = token;
     }
+    console.log(`${JSON.stringify(config)}`);
     return config;
   },
   (error) => {
@@ -27,16 +29,16 @@ instance.interceptors.request.use(
 );
 
 // Add response interceptor to remove the JWT cookie when the user logs out!!!
-instance.interceptors.response.use(
-  (resp) => {
-    return resp;
-  },
-  (err) => {
-    if (err.response.status === 401) {
-      Cookies.remove("myjwt");
-    }
-    return Promise.reject(err);
-  }
-);
+// instance.interceptors.response.use(
+//   (resp) => {
+//     return resp;
+//   },
+//   (err) => {
+//     if (err.response.status === 401) {
+//       Cookies.remove("myjwt");
+//     }
+//     return Promise.reject(err);
+//   }
+// );
 
 export default instance;
