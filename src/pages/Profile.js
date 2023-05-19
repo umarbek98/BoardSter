@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { makeLogoutRequest } from "../redux/loginSlice";
+import Cookies from "js-cookie";
 
 function Profile() {
   const userId = useSelector((state) => state.login.user?.userId || "");
@@ -11,7 +12,7 @@ function Profile() {
   useEffect(() => {
     if (userId) {
       axios
-        .get(`http://localhost:5000/orders/${userId}`)
+        .get(`http://54.90.78.74:5000/orders/${userId}`)
         .then((resp) => setUserOrders(resp.data.orders))
         .catch((error) => console.error(error));
     }
@@ -19,7 +20,8 @@ function Profile() {
 
   function handleLogout() {
     dispatch(makeLogoutRequest());
-    window.location.href = "/";
+    window.location.href = "/login";
+    Cookies.remove("myjwt");
   }
 
   return (

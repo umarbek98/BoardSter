@@ -7,11 +7,33 @@ const initialState = {
   user: null,
 };
 
+export const makeLogoutRequest = createAsyncThunk(
+  "login/makeLogoutRequest",
+  async () => {
+    const resp = await instance.post("http://54.90.78.74:5000/logout");
+    Cookies.remove("myjwt");
+    return resp.data;
+  },
+  {
+    fulfilled: (state) => {
+      state.status = "succeeded";
+      state.user = null;
+      state.isLoggedIn = false;
+    },
+    pending: (state) => {
+      state.status = "loading";
+    },
+    rejected: (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message;
+    },
+  }
+);
+
 export const makeLoginCheckRequest = createAsyncThunk(
   "login/makeLoginCheckRequest",
   async () => {
-    const resp = await instance.get("http://localhost:5000/check");
-    console.log(`resp: ${JSON.stringify(resp, null, 2)}`);
+    const resp = await instance.get("http://54.90.78.74:5000/check");
     if (resp.data.userId) {
       return resp.data;
     } else {
@@ -39,7 +61,7 @@ export const makeLoginRequest = createAsyncThunk(
   async (loginData, { rejectWithValue }) => {
     try {
       const resp = await instance.post(
-        "http://localhost:5000/login",
+        "http://54.90.78.74:5000/login",
         loginData
       );
       const { token, message, status } = resp.data;
@@ -57,24 +79,6 @@ export const makeLoginRequest = createAsyncThunk(
         return rejectWithValue("Something went wrong. Please try again later.");
       }
     }
-  },
-  {
-    pending: (state) => {
-      state.status = "loading";
-    },
-    rejected: (state, action) => {
-      state.status = "failed";
-      state.error = action.error.message;
-    },
-  }
-);
-
-export const makeLogoutRequest = createAsyncThunk(
-  "login/makeLogoutRequest",
-  async () => {
-    const resp = await instance.post("http://localhost:5000/logout");
-    Cookies.remove("myjwt");
-    return resp.data;
   },
   {
     pending: (state) => {

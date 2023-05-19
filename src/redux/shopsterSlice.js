@@ -29,12 +29,12 @@ export const shopsterSlice = createSlice({
     },
     incrementQuantity: (state, action) => {
       const item = state.productData.find((item) => {
-        console.log(JSON.stringify(item, null, 2));
-        console.log(action.payload);
+        // console.log(JSON.stringify(item, null, 2));
+        // console.log(action.payload);
 
         return item._id === action.payload;
       });
-      console.log(JSON.stringify(state, null, 2));
+      // console.log(JSON.stringify(state, null, 2));
 
       if (item) {
         item.quantity++;
@@ -45,8 +45,8 @@ export const shopsterSlice = createSlice({
         return item._id === action.payload;
       });
 
-      console.log(item);
-      console.log(JSON.stringify(state, null, 2));
+      // console.log(item);
+      // console.log(JSON.stringify(state, null, 2));
       if (item.quantity === 1) {
         item.quantity = 1;
       } else {

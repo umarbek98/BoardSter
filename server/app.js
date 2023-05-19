@@ -37,7 +37,6 @@ app.post("/register", async (req, res) => {
 
 app.get("/check", verifyToken, async (req, res, next) => {
   const userId = req.userId;
-  console.log("MYCUSTOMER: " + userId);
   try {
     const user = await User.findById(userId);
     console.log(user);
@@ -52,10 +51,7 @@ app.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    console.log(`user:${JSON.stringify(user, null, 2)}`);
     const authenticated = await user.authenticate(password);
-    console.log(`authenticated: 
-    ${authenticated}`);
     if (!user || !authenticated.user || null || undefined) {
       const err = new Error();
       next(err);
@@ -67,7 +63,6 @@ app.post("/login", async (req, res, next) => {
           expiresIn: "1h",
         }
       );
-      console.log(`token: ${token}`);
       res.json({
         status: 200,
         token,

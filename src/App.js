@@ -77,7 +77,6 @@ function App() {
 
   useEffect(() => {
     dispatch(makeLoginCheckRequest());
-    console.log("dispatch(makeLoginCheckRequest())");
   });
 
   return (
